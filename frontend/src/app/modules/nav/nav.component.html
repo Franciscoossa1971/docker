@@ -1,0 +1,25 @@
+<nav class="navbar navbar-dark bg-dark px-4 fixed-top">
+    <div class="container-fluid d-flex align-items-center justify-content-between">
+        <a class="navbar-brand fw-bold btn btn-outline-primary" routerLink="/">
+            <i class="bi bi-house-door"> Inicio</i>
+        </a>
+        <div class="d-flex gap-2">
+            <button class="btn btn-outline-light rounded-pill px-4" routerLink="/tarea" routerLinkActive="active-nav"
+                [routerLinkActiveOptions]="{ exact: true }">
+                <i class="bi bi-journal-check"> Tareas</i>
+            </button>
+            <button class="btn btn-outline-light rounded-pill px-4" routerLink="/persona" routerLinkActive="active-nav"
+                [routerLinkActiveOptions]="{ exact: true }">
+                <i class="bi bi-people"> Persona</i>
+            </button>
+            <button class="btn btn-outline-light rounded-pill px-4" routerLink="/reserva" routerLinkActive="active-nav"
+                [routerLinkActiveOptions]="{ exact: true }">
+                <i class="bi bi-card-text"> Reservas</i>
+            </button>
+            <button class="btn btn-outline-light rounded-pill px-4" routerLink="/landing" routerLinkActive="active-nav"
+                [routerLinkActiveOptions]="{ exact: true }">
+                <i class="bi bi-card-text"> Cards</i>
+            </button>
+        </div>
+    </div>
+</nav>
