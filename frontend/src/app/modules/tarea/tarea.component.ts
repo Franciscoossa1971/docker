@@ -16,6 +16,7 @@ export class TareaComponent implements OnInit{
   tareaForm: FormGroup;
   tareas: Tarea[] = [];
   tareaEditando?: Tarea; 
+  isEditing: boolean = false;
 
   constructor(private fb: FormBuilder, 
     private tareaService: TareaService, 
@@ -44,7 +45,6 @@ onSubmit() {
       this.actualizarTarea(this.tareaEditando.id!, nuevaTarea.nombre);
       this.tareaEditando = undefined; 
     } else {
-      // Crear una nueva tarea
       this.tareaService.guardarTarea(nuevaTarea).subscribe({
         next: () => {
           this.notificacion.success('Tarea guardada');
@@ -66,7 +66,6 @@ cargarTareas() {
     });
   }
 
-  // Método exclusivo para actualizar tarea
   actualizarTarea(id: number, nuevoNombre: string) {
     const tareaActualizada = {
       nombre: nuevoNombre,
@@ -79,14 +78,15 @@ cargarTareas() {
       this.notificacion.success('Tarea actualizada correctamente');
       this.tareaForm.reset();
       this.tareaEditando = undefined; 
+      this.isEditing = false;
       this.cargarTareas(); 
     }, error => {
       this.notificacion.error('Error al actualizar la tarea');
     });
   }
 
-  // Cambiar el estado de realización y actualizar la fecha de realización
   cambiarEstadoTarea(tarea: Tarea) {
+    if (this.isEditing) return;
     const tareaActualizada = {
       ...tarea,
       realizada: !tarea.realizada,
@@ -104,6 +104,7 @@ cargarTareas() {
   }
 
   async eliminarTarea(tarea: Tarea) {
+    if (this.isEditing) return;
     const confirmacion = await this.notificacion.confirmar("¿Estás seguro de que deseas eliminar la tarea?");
 
     if (confirmacion) {
@@ -114,11 +115,17 @@ cargarTareas() {
     }
   }
 
-  // Método para cargar los datos de la tarea en el formulario 
   editarTarea(tarea: Tarea) {
+    this.isEditing = true; 
     this.tareaEditando = tarea; 
     this.tareaForm.patchValue({ 
       nombre: tarea.nombre
     });
+  }
+
+  cancelarEdicion() {
+    this.isEditing = false;  
+    this.tareaEditando = undefined;
+    this.tareaForm.reset();
   }
 }

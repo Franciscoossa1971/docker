@@ -10,6 +10,8 @@
 
         <div class="mb-3 text-center">
           <button type="submit" class="btn btn-primary" [disabled]="!tareaForm.valid">Guardar tarea</button>
+          <button *ngIf="isEditing" type="button" class="btn btn-secondary ms-2"
+            (click)="cancelarEdicion()">Cancelar</button>
         </div>
       </form>
     </div>
@@ -21,27 +23,33 @@
 
   <div *ngIf="tareas && tareas.length > 0; else sinTareas">
     <div *ngFor="let tarea of tareas" class="card mb-3">
-      <div class="card-body">
+      <div class="card-body" (click)="!isEditing && cambiarEstadoTarea(tarea)">
         <div class="d-flex justify-content-between align-items-center">
           <h3 class="card-title mb-0">
             {{ tarea.nombre }}</h3>
 
           <!-- Contenedor de los botones -->
           <div class="d-flex align-items-center gap-2">
-            <label class="form-check-label d-flex align-items-center">
-              <input type="checkbox" class="form-check-input" style="background-color: blue" [checked]="tarea.realizada"
-                (change)="cambiarEstadoTarea(tarea)" />
-              <span class="ms-2">Realizada</span>
+            <label class="form-check-label d-flex align-items-center gap-2">
+              <input type="checkbox" class="form-check-input d-none" [checked]="tarea.realizada"
+                (change)="!isEditing && cambiarEstadoTarea(tarea)" />
+
+              <span class="d-inline-flex align-items-center justify-content-center rounded-circle"
+                [ngClass]="tarea.realizada ? 'bg-success text-white' : 'bg-danger text-white'"
+                style="width: 32px; height: 32px;">
+                <i class="fas" [ngClass]="tarea.realizada ? 'fa-check' : 'fa-times'"></i>
+              </span>
+
+              <span [ngClass]="tarea.realizada ? 'text-success' : 'text-danger'">
+                {{ tarea.realizada ? 'Realizada' : 'NO Realizada' }}
+              </span>
             </label>
 
-            <!-- Botón de editar -->
-            <button class="btn btn-warning btn-sm" (click)="editarTarea(tarea)">
-              ✏️ Editar
-            </button>
+            <button class="btn btn-warning btn-sm" (click)="editarTarea(tarea); $event.stopPropagation()"
+              [disabled]="isEditing"> ✏️ Editar </button>
 
-            <button class="btn btn-danger btn-sm" (click)="eliminarTarea(tarea)">
-              🗑️ Eliminar
-            </button>
+            <button class="btn btn-danger btn-sm" (click)="eliminarTarea(tarea); $event.stopPropagation()"
+              [disabled]="isEditing"> 🗑️ Eliminar </button>
           </div>
         </div>
 
